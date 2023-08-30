@@ -6,24 +6,26 @@ Created on Tue Aug 29 09:32:45 2023
 """
 
 #Biblioteca V1
-import numpy as np
 import csv
 import os
 
 class Book:
-    def __init__(self,title, author,genre,year) -> None:
+    def __init__(self, title, author, genre, year) -> None:
         self.title = title
         self.author = author
         self.genre = genre
         self.year = year
 
 class Library:
-    def __init__(self) -> None:
+    def __init__(self, filename='library.csv') -> None:
         self.books = []
+        self.filename = filename
+        self.loadBooksFromCSV()
 
-    def addBook(self,book):
+    def addBook(self, book):
         self.books.append(book)
-    
+        self.saveBookToCSV(book)
+
     def showBooks(self):
         if not self.books:
             print('No hay libros')
@@ -36,6 +38,22 @@ class Library:
                 print(f'Anio: {book.year}')
                 print("*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*")
 
+    def saveBookToCSV(self, book):
+        with open(self.filename, 'a', newline='') as csvfile:
+            writer = csv.writer(csvfile)
+            writer.writerow([book.title, book.author, book.genre, book.year])
+
+    def loadBooksFromCSV(self):
+        self.books = []
+        try:
+            with open(self.filename, 'r') as csvfile:
+                reader = csv.reader(csvfile)
+                for row in reader:
+                    if len(row) == 4:
+                        book = Book(row[0], row[1], row[2], row[3])
+                        self.books.append(book)
+        except FileNotFoundError:
+            pass
 
 class UI:
     def __init__(self) -> None:
@@ -46,7 +64,7 @@ class UI:
         while opt != 0:
             clear = lambda: os.system('cls')
             clear()
-            print(''' 
+            print('''
             ---------MENU--------------------
             1. agregar libro 
             2. mostrar libro
@@ -65,7 +83,9 @@ class UI:
             elif opt == 2:
                 self.showBooks()
                 os.system('pause >NULL')
-        
+            
+                
+
     def addBook(self):
         title = input("Ingresa el titulo del libro: ")
         author = input("Ingresa el autor del libro: ")
@@ -79,6 +99,6 @@ class UI:
 
     def showBooks(self):
         self.myLibrary.showBooks()
-        
+
 ui = UI()
 ui.menu()
