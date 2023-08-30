@@ -2,7 +2,8 @@
 """
 Created on Tue Aug 29 09:32:45 2023
 
-@author: samme
+@author: Samuel Israel Medina Rodriguez
+        Emanuel de Jesus Vazquez Rosales
 """
 
 #Biblioteca V1
