@@ -83,7 +83,6 @@ class Library:
 #                    autor     messi  
     def search(self, atributo, criterio):
         booksFinded = []
-        print(self.books)
         for book in self.books:
             if criterio.lower() == getattr(book,atributo).lower():
                 booksFinded.append(book)
@@ -131,6 +130,24 @@ class Library:
         else:
              print("No se encontró el book especificado.")
 
+    def editBook(self, atributo, criterio, titulo):
+        booksToEdit = self.search("title",titulo)
+
+        if booksToEdit:
+            setattr(booksToEdit[0], atributo, criterio)
+        else:
+            print("El libro no existe")
+        self.addBooks()
+    def deleteBook(self, title):
+        for book in self.books:
+            if book.title.lower() ==title.lower():
+                self.books.remove(book)
+                self.addBooks()
+                print(f"Libro '{book.title}' eliminado con éxito.")
+                self.addBooks()
+                return
+        print("El libro no fue encontrado en la biblioteca.")
+        
     
 
 class UI:
@@ -149,9 +166,8 @@ class UI:
             3. buscar books
             4. reservar book 
             5. cancelar reserva de book 
-            6. prestar book
-            7. devolver book 
-            8. actualizar información
+            6. actualizar información
+            7. eliminar book
             0. salir
             -----------------------------------
             ''')
@@ -170,6 +186,12 @@ class UI:
                 os.system('pause >NULL')
             elif opt == 5:
                 self.cancel()
+                os.system('pause >NULL')
+            elif opt == 6:
+                self.editBook()
+                os.system('pause >NULL')
+            elif opt == 7:
+                self.deleteBook()
                 os.system('pause >NULL')
 
 
@@ -203,6 +225,16 @@ class UI:
         title = input("Ingrese el titulo del libro que desea cancelar la reservacion: ")
         self.myLibrary.cancelReservation(title)
 
+    def editBook(self):
+        title = input("Ingrese el título del libro que desea editar: ")
+        attribute = input("Ingrese el atributo que desea editar (titulo, autor, genero, anio): ")
+        new_value = input("Ingrese el nuevo valor para el atributo: ")
+        self.myLibrary.editBook(attribute, new_value, title)
+        print(f"Libro '{title}' editado exitosamente.")
+    
+    def deleteBook(self):
+        title = input("Ingrese el título del libro que desea eliminar: ")
+        self.myLibrary.deleteBook(title)
 
 
 ui = UI()
