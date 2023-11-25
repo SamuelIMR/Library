@@ -10,6 +10,7 @@ Created on Tue Aug 29 09:32:45 2023
 #Biblioteca V1
 import csv
 import os
+import re
 import tkinter as tk
 from tkinter import messagebox
 from tkinter import PhotoImage
@@ -96,7 +97,7 @@ class Library:
         booksFound = []
         
         for book in self.books:
-            if criterio.lower() == getattr(book, atributo).lower():
+            if criterio.lower() in getattr(book, atributo).lower():
                 booksFound.append(book)
 
         if not booksFound:
@@ -116,19 +117,23 @@ class Library:
 
         return booksFound
     
-
+    
     def search(self, atributo, criterio):
         booksFound = []
         
+        #for book in self.books:
+        #    if criterio.lower() == getattr(book, atributo).lower():
+        #        booksFound.append(book)
         for book in self.books:
-            if criterio.lower() == getattr(book, atributo).lower():
-                booksFound.append(book)
+            if criterio.lower() in getattr(book, atributo).lower():
+               booksFound.append(book)
+
 
         if not booksFound:
             return None
  
         return booksFound
-    
+       
 
     
         
@@ -308,8 +313,14 @@ class UI:
 
     def addBookToLibrary(self, title, author, genre, year, add_book_window):
         book = Book(title, author, genre, year)
-        self.myLibrary.addBook(book)
-        messagebox.showinfo("Success", "Book added successfully!")
+        title_books = []
+        for check_book in self.myLibrary.books:
+            title_books.append(check_book.title)
+        if title in title_books:
+            messagebox.showinfo("Error", "Book duplicated!")
+        else:
+            self.myLibrary.addBook(book)
+            messagebox.showinfo("Success", "Book added successfully!")
         add_book_window.destroy()
 
     def showBooks(self):
