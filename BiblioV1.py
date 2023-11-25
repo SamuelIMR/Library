@@ -37,7 +37,6 @@ class Library:
         
 
     def addBook(self, book):
-        while()
         self.books.append(book)
         self.saveBookToCSV(book)
 
@@ -314,8 +313,14 @@ class UI:
 
     def addBookToLibrary(self, title, author, genre, year, add_book_window):
         book = Book(title, author, genre, year)
-        self.myLibrary.addBook(book)
-        messagebox.showinfo("Success", "Book added successfully!")
+        title_books = []
+        for check_book in self.myLibrary.books:
+            title_books.append(check_book.title)
+        if title in title_books:
+            messagebox.showinfo("Error", "Book duplicated!")
+        else:
+            self.myLibrary.addBook(book)
+            messagebox.showinfo("Success", "Book added successfully!")
         add_book_window.destroy()
 
     def showBooks(self):
